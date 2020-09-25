@@ -16,7 +16,8 @@
     "express-validator": "^6.6.1",
     "mongoose": "^5.10.6",
     "mongoose-auto-increment": "^5.0.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.7",
@@ -24,6 +25,7 @@
     "@types/mongoose": "^5.7.36",
     "@types/mongoose-auto-increment": "^5.0.33",
     "@types/morgan": "^1.9.1",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "eslint": "^7.9.0",
