@@ -6,16 +6,14 @@ const initDatabase = (): void => {
   const { username, password, host, database, port } = config.database;
 
   mongoose.connect(
-    `mongodb://${username}:${password}@${host}:${port}/${database}`
-  );
-
-  const db = mongoose.connection;
-
-  autoIncrement.initialize(db);
-
-  const handleError = (err: Error) => console.error(`error on mongodb connection \n${err}`);
-
-  db.on('error', handleError);
+    `mongodb://${username}:${password}@${host}:${port}/${database}?authSource=admin&authMechanism=SCRAM-SHA-1`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }
+  ).then((db) => {
+    autoIncrement.initialize(db.connection);
+  });
 };
 
 export default initDatabase;
