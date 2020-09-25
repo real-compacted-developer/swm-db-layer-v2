@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import autoIncrement from 'mongoose-auto-increment';
 import config from '../config';
 
-const initDatabase = () => {
+const initDatabase = (): void => {
   const { username, password, host, database, port } = config.database;
 
   mongoose.connect(
@@ -9,6 +10,8 @@ const initDatabase = () => {
   );
 
   const db = mongoose.connection;
+
+  autoIncrement.initialize(db);
 
   const handleError = (err: Error) => console.error(`error on mongodb connection \n${err}`);
 
