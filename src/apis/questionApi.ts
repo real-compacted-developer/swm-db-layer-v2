@@ -64,9 +64,14 @@ router.put('/:id', updateQuestionValidator, checkValidation, async (req: express
   const { id } = req.params;
   const { title, content, slideOrder, slideImageURL } = req.body;
 
-  const data = await questionModel.findOne({
+  const data = await questionModel.findOneAndUpdate({
     id
-  });
+  }, {
+    title,
+    content,
+    slideOrder,
+    slideImageURL
+  }, { new: true });
 
   if (!data) {
     res.status(404).json({
@@ -75,13 +80,6 @@ router.put('/:id', updateQuestionValidator, checkValidation, async (req: express
     });
     return;
   }
-
-  await data.update({
-    title,
-    content,
-    slideOrder,
-    slideImageURL
-  });
 
   res.status(200).send({
     success: true,
@@ -110,9 +108,13 @@ router.post('/like/:id', async (req, res) => {
     like: currentLike + 1
   });
 
+  const newData = await questionModel.findOne({
+    id
+  });
+
   res.status(200).send({
     success: true,
-    data
+    data: newData
   });
 });
 
@@ -145,16 +147,20 @@ router.delete('/like/:id', async (req, res) => {
     like: currentLike - 1
   });
 
+  const newData = await questionModel.findOne({
+    id
+  });
+
   res.status(200).send({
     success: true,
-    data
+    data: newData
   });
 });
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await questionModel.findOne({
+  const data = await questionModel.findOneAndDelete({
     id
   });
 
@@ -165,8 +171,6 @@ router.delete('/:id', async (req, res) => {
     });
     return;
   }
-
-  await data.remove();
 
   res.status(200).json({
     success: true,

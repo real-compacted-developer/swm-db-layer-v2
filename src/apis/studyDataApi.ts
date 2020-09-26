@@ -85,9 +85,15 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
     return;
   }
 
-  const data = await studyDataModel.findOne({
+  const data = await studyDataModel.findOneAndUpdate({
     id
-  });
+  }, {
+    week,
+    date,
+    slideInfo,
+    studyTitle,
+    questions
+  }, { new: true });
 
   if (!data) {
     res.status(404).json({
@@ -96,14 +102,6 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
     });
     return;
   }
-
-  await data.update({
-    week,
-    date,
-    slideInfo,
-    studyTitle,
-    questions
-  });
 
   res.status(200).send({
     success: true,
@@ -114,7 +112,7 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await studyDataModel.findOne({
+  const data = await studyDataModel.findOneAndDelete({
     id
   });
 
@@ -125,8 +123,6 @@ router.delete('/:id', async (req, res) => {
     });
     return;
   }
-
-  await data.remove();
 
   res.status(200).json({
     success: true,

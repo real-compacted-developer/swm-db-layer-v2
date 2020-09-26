@@ -70,9 +70,16 @@ router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: expre
   const { id } = req.params;
   const { title, category, password, salt, limitCount, isPremium } = req.body;
 
-  const data = await studyGroupModel.findOne({
+  const data = await studyGroupModel.findOneAndUpdate({
     id
-  });
+  }, {
+    title,
+    category,
+    password,
+    salt,
+    limitCount,
+    isPremium
+  }, { new: true });
 
   if (!data) {
     res.status(404).json({
@@ -81,15 +88,6 @@ router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: expre
     });
     return;
   }
-
-  await data.update({
-    title,
-    category,
-    password,
-    salt,
-    limitCount,
-    isPremium
-  });
 
   res.status(200).send({
     success: true,
@@ -123,9 +121,13 @@ router.post('/people/:id', peopleValidator, checkValidation, async (req: express
     people
   });
 
+  const newData = await studyGroupModel.findOne({
+    id
+  });
+
   res.status(200).json({
     success: true,
-    data
+    data: newData
   });
 });
 
@@ -133,7 +135,9 @@ router.delete('/people/:id', peopleValidator, checkValidation, async (req: expre
   const { id } = req.params;
   const { userId } = req.body;
 
-  const data = await studyGroupModel.findById(id);
+  const data = await studyGroupModel.findOne({
+    id
+  });
   if (!data) {
     res.status(404).json({
       success: false,
@@ -146,20 +150,24 @@ router.delete('/people/:id', peopleValidator, checkValidation, async (req: expre
   const deletedIndex = people.findIndex((person) => person === userId);
   people.splice(deletedIndex, 1);
 
-  await data.update({
+  await data.updateOne({
     people
+  });
+
+  const newData = await studyGroupModel.findOne({
+    id
   });
 
   res.status(200).json({
     success: true,
-    data
+    data: newData
   });
 });
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await studyGroupModel.findOne({
+  const data = await studyGroupModel.findOneAndDelete({
     id
   });
 
@@ -170,8 +178,6 @@ router.delete('/:id', async (req, res) => {
     });
     return;
   }
-
-  await data.remove();
 
   res.status(200).json({
     success: true,
