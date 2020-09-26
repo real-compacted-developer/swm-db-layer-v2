@@ -47,7 +47,7 @@ router.post('/', createStudyGroupValidator, checkValidation, async (req: express
   const { title, category, password, salt, maxPeople, isPremium } = req.body;
 
   const data = await studyGroupModel.create({
-    _id: uuidv4(),
+    id: uuidv4(),
     title,
     category,
     password,

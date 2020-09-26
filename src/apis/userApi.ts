@@ -59,7 +59,7 @@ router.post('/', createUserValidator, checkValidation, async (req: express.Reque
   }
 
   const data = await userModel.create({
-    _id: userId,
+    id: userId,
     nickname,
     email,
     profileImage,
