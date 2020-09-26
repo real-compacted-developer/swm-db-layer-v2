@@ -44,6 +44,8 @@ export const studyDataSchema: mongoose.Schema = new mongoose.Schema({
   timestamps: true
 });
 
+autoIncrement.initialize(mongoose.connection);
+
 studyDataSchema.plugin(autoIncrement.plugin, {
   model: 'studyData',
   field: 'id',

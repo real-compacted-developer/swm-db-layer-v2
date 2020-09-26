@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import autoIncrement from 'mongoose-auto-increment';
 import config from '../config';
 
 const initDatabase = (): void => {
@@ -11,9 +10,7 @@ const initDatabase = (): void => {
       useNewUrlParser: true,
       useUnifiedTopology: true
     }
-  ).then((db) => {
-    autoIncrement.initialize(db.connection);
-  });
+  );
 };
 
 export default initDatabase;

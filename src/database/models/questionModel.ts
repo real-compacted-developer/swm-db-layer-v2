@@ -50,6 +50,8 @@ export const questionSchema: mongoose.Schema = new mongoose.Schema({
   timestamps: true
 });
 
+autoIncrement.initialize(mongoose.connection);
+
 questionSchema.plugin(autoIncrement.plugin, {
   model: 'question',
   field: 'id',
