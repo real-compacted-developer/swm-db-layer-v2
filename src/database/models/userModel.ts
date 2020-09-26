@@ -14,7 +14,8 @@ export const userSchema: mongoose.Schema = new mongoose.Schema({
   id: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
   nickname: {
     type: String,
@@ -30,14 +31,6 @@ export const userSchema: mongoose.Schema = new mongoose.Schema({
   },
   isPremium: {
     type: Boolean,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    required: true
-  },
-  updatedAt: {
-    type: Date,
     required: true
   }
 }, {

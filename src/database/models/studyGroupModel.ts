@@ -16,7 +16,8 @@ export const studyGroupSchema: mongoose.Schema = new mongoose.Schema({
   id: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
   title: {
     type: String,

@@ -17,7 +17,8 @@ export const studyDataSchema: mongoose.Schema = new mongoose.Schema({
   id: {
     type: Number,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
   week: {
     type: Number,
@@ -37,14 +38,6 @@ export const studyDataSchema: mongoose.Schema = new mongoose.Schema({
   },
   questions: {
     type: [questionSchema],
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    required: true
-  },
-  updatedAt: {
-    type: Date,
     required: true
   }
 }, {

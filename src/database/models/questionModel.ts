@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import autoIncrement from 'mongoose-auto-increment';
+import { userSchema } from './userModel';
 
 export interface QuestionAttribute extends mongoose.Document {
     readonly id: number;
@@ -18,14 +19,11 @@ export const questionSchema: mongoose.Schema = new mongoose.Schema({
   id: {
     type: Number,
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
-  studyDataId: {
-    type: Number,
-    required: true
-  },
-  userId: {
-    type: String,
+  user: {
+    type: userSchema,
     required: true
   },
   title: {
@@ -46,14 +44,6 @@ export const questionSchema: mongoose.Schema = new mongoose.Schema({
   },
   slideImageURL: {
     type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    required: true
-  },
-  updatedAt: {
-    type: Date,
     required: true
   }
 }, {
