@@ -77,9 +77,14 @@ router.put('/:id', updateUserValidator, checkValidation, async (req: express.Req
   const { id } = req.params;
   const { nickname, email, profileImage, isPremium } = req.body;
 
-  const data = await userModel.findOne({
+  const data = await userModel.findOneAndUpdate({
     id
-  });
+  }, {
+    email,
+    nickname,
+    profileImage,
+    isPremium
+  }, { new: true });
 
   if (!data) {
     res.status(404).json({
@@ -88,13 +93,6 @@ router.put('/:id', updateUserValidator, checkValidation, async (req: express.Req
     });
     return;
   }
-
-  await data.update({
-    email,
-    nickname,
-    profileImage,
-    isPremium
-  });
 
   res.status(200).send({
     success: true,
@@ -105,7 +103,7 @@ router.put('/:id', updateUserValidator, checkValidation, async (req: express.Req
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await userModel.findOne({
+  const data = await userModel.findOneAndDelete({
     id
   });
 
@@ -116,8 +114,6 @@ router.delete('/:id', async (req, res) => {
     });
     return;
   }
-
-  await data.remove();
 
   res.status(200).json({
     success: true,
