@@ -16,7 +16,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await userModel.findById(id);
+  const data = await userModel.findOne({
+    id
+  });
 
   if (!data) {
     res.status(404).json({
@@ -75,7 +77,10 @@ router.put('/:id', updateUserValidator, checkValidation, async (req: express.Req
   const { id } = req.params;
   const { nickname, email, profileImage, isPremium } = req.body;
 
-  const data = await userModel.findById(id);
+  const data = await userModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
@@ -100,7 +105,10 @@ router.put('/:id', updateUserValidator, checkValidation, async (req: express.Req
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await userModel.findById(id);
+  const data = await userModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,

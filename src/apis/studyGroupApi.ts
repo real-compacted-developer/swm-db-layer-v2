@@ -17,7 +17,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await studyGroupModel.findById(id);
+  const data = await studyGroupModel.findOne({
+    id
+  });
 
   if (!data) {
     res.status(404).json({
@@ -68,7 +70,10 @@ router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: expre
   const { id } = req.params;
   const { title, category, password, salt, limitCount, isPremium } = req.body;
 
-  const data = await studyGroupModel.findById(id);
+  const data = await studyGroupModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
@@ -99,7 +104,10 @@ router.post('/people/:id', peopleValidator, checkValidation, async (req: express
   const { id } = req.params;
   const { userId } = req.body;
 
-  const data = await studyGroupModel.findById(id);
+  const data = await studyGroupModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
@@ -151,7 +159,10 @@ router.delete('/people/:id', peopleValidator, checkValidation, async (req: expre
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await studyGroupModel.findById(id);
+  const data = await studyGroupModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,

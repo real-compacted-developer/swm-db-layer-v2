@@ -16,7 +16,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await questionModel.findById(id);
+  const data = await questionModel.findOne({
+    id
+  });
 
   if (!data) {
     res.status(404).json({
@@ -62,7 +64,10 @@ router.put('/:id', updateQuestionValidator, checkValidation, async (req: express
   const { id } = req.params;
   const { title, content, slideOrder, slideImageURL } = req.body;
 
-  const data = await questionModel.findById(id);
+  const data = await questionModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
@@ -87,7 +92,10 @@ router.put('/:id', updateQuestionValidator, checkValidation, async (req: express
 router.post('/like/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await questionModel.findById(id);
+  const data = await questionModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
@@ -111,7 +119,10 @@ router.post('/like/:id', async (req, res) => {
 router.delete('/like/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await questionModel.findById(id);
+  const data = await questionModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
@@ -143,7 +154,10 @@ router.delete('/like/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await questionModel.findById(id);
+  const data = await questionModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,

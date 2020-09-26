@@ -17,7 +17,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await studyDataModel.findById(id);
+  const data = await studyDataModel.findOne({
+    id
+  });
 
   if (!data) {
     res.status(404).json({
@@ -83,7 +85,10 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
     return;
   }
 
-  const data = await studyDataModel.findById(id);
+  const data = await studyDataModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
@@ -109,7 +114,10 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const data = await studyDataModel.findById(id);
+  const data = await studyDataModel.findOne({
+    id
+  });
+
   if (!data) {
     res.status(404).json({
       success: false,
