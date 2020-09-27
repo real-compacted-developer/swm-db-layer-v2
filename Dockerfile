@@ -6,5 +6,6 @@ COPY / /workspace
 WORKDIR /workspace
 
 RUN yarn
+RUN yarn build
 
-CMD ["yarn", "start"]
+CMD ["yarn", "start:production"]
