@@ -41,10 +41,11 @@ const createStudyGroupValidator = [
   body('password').isString(),
   body('salt').isString(),
   body('maxPeople').isNumeric(),
+  body('owner').isString(),
   body('isPremium').isBoolean()
 ];
 router.post('/', createStudyGroupValidator, checkValidation, async (req: express.Request, res: express.Response) => {
-  const { title, category, password, salt, maxPeople, isPremium } = req.body;
+  const { title, category, password, salt, maxPeople, owner, isPremium } = req.body;
 
   const data = await studyGroupModel.create({
     id: uuidv4(),
@@ -53,6 +54,7 @@ router.post('/', createStudyGroupValidator, checkValidation, async (req: express
     password,
     salt,
     maxPeople,
+    owner,
     isPremium,
     people: []
   });
@@ -68,7 +70,7 @@ const updateStudyGroupValidator = [
 ];
 router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
-  const { title, category, password, salt, limitCount, isPremium } = req.body;
+  const { title, category, password, salt, maxPeople, owner, isPremium } = req.body;
 
   const data = await studyGroupModel.findOneAndUpdate({
     id
@@ -77,7 +79,8 @@ router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: expre
     category,
     password,
     salt,
-    limitCount,
+    maxPeople,
+    owner,
     isPremium
   }, { new: true });
 

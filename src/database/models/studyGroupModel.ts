@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { userSchema } from './userModel';
 
 export interface StudyGroupAttribute extends mongoose.Document {
   readonly id: string;
@@ -37,6 +38,10 @@ export const studyGroupSchema: mongoose.Schema = new mongoose.Schema({
   },
   people: {
     type: Array,
+    required: true
+  },
+  owner: {
+    type: String,
     required: true
   },
   maxPeople: {
