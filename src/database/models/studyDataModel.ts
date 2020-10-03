@@ -7,7 +7,7 @@ export interface StudyDataAttribute extends mongoose.Document {
     readonly week: number;
     readonly date: Date;
     readonly slideInfo: string[];
-    readonly studyTitle: string;
+    readonly studyGroupId: string;
     readonly questions: QuestionAttribute[];
     readonly createdAt: Date;
     readonly updatedAt: Date;
@@ -32,7 +32,7 @@ export const studyDataSchema: mongoose.Schema = new mongoose.Schema({
     type: Array,
     required: true
   },
-  studyTitle: {
+  studyGroupId: {
     type: String,
     required: true
   },

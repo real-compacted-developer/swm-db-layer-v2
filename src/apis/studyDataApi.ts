@@ -35,18 +35,38 @@ router.get('/:id', async (req, res) => {
   });
 });
 
+router.get('/bystudy/:id', async (req, res) => {
+  const { id } = req.params;
+  const data = await studyDataModel.find({
+    studyGroupId: id
+  });
+
+  if (!data) {
+    res.status(404).json({
+      success: false,
+      message: ERROR_CODE.STUDY_DATA_NOT_FOUND
+    });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    data
+  });
+});
+
 const createStudyDataValidator = [
   body('week').isNumeric(),
   body('date').isDate(),
   body('slideInfo').isArray(),
-  body('studyTitle').isString(),
+  body('studyGroupId').isString(),
   body('questions').isArray()
 ];
 router.post('/', createStudyDataValidator, checkValidation, async (req: express.Request, res: express.Response) => {
-  const { week, date, slideInfo, studyTitle, questions } = req.body;
+  const { week, date, slideInfo, studyGroupId, questions } = req.body;
 
   const currentStudyGroup = await studyGroupModel.findOne({
-    title: studyTitle
+    id: studyGroupId
   });
   if (!currentStudyGroup) {
     res.status(404).json({
@@ -60,7 +80,7 @@ router.post('/', createStudyDataValidator, checkValidation, async (req: express.
     week,
     date,
     slideInfo,
-    studyTitle,
+    studyGroupId,
     questions
   });
 
@@ -72,10 +92,10 @@ router.post('/', createStudyDataValidator, checkValidation, async (req: express.
 
 router.put('/:id', createStudyDataValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
-  const { week, date, slideInfo, studyTitle, questions } = req.body;
+  const { week, date, slideInfo, studyGroupId, questions } = req.body;
 
   const currentStudyGroup = await studyGroupModel.findOne({
-    title: studyTitle
+    id: studyGroupId
   });
   if (!currentStudyGroup) {
     res.status(404).json({
@@ -91,7 +111,7 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
     week,
     date,
     slideInfo,
-    studyTitle,
+    studyGroupId,
     questions
   }, { new: true });
 
