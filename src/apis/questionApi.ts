@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
 });
 
 const createQuestionValidator = [
-  body('user').isJSON(),
+  body('user').exists(),
   body('title').isString(),
   body('content').isString(),
   body('slideOrder').isNumeric(),
