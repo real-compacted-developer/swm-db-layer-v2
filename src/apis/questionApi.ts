@@ -2,35 +2,27 @@ import express from 'express';
 import { body } from 'express-validator';
 import ERROR_CODE from '../constants/errorCode';
 import checkValidation from '../middlewares/validator';
-import questionModel from '../database/models/questionModel';
+import studyDataModel from '../database/models/studyDataModel';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  const data = await questionModel.find();
-  res.status(200).json({
-    success: true,
-    data
-  });
-});
-
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const data = await questionModel.findOne({
-    id
+router.get('/:studyDataId', async (req, res) => {
+  const { studyDataId } = req.params;
+  const data = await studyDataModel.findOne({
+    studyDataId
   });
 
   if (!data) {
     res.status(200).json({
       success: false,
-      message: ERROR_CODE.QUESTION_NOT_FOUND
+      message: ERROR_CODE.STUDY_DATA_NOT_FOUND
     });
     return;
   }
 
   res.status(200).json({
     success: true,
-    data
+    data: data.questions
   });
 });
 
@@ -40,20 +32,40 @@ const createQuestionValidator = [
   body('content').isString(),
   body('slideOrder').isNumeric(),
   body('slideImageURL').isString(),
-  body('studyGroupId').isString()
+  body('studyDataId').isString()
 ];
 router.post('/', createQuestionValidator, checkValidation, async (req: express.Request, res: express.Response) => {
-  const { title, content, user, slideOrder, slideImageURL, studyGroupId } = req.body;
+  const { title, content, user, slideOrder, slideImageURL, studyDataId } = req.body;
 
-  const data = await questionModel.create({
+  const currentStudyData = await studyDataModel.findOne({
+    id: studyDataId
+  });
+
+  if (!currentStudyData) {
+    res.status(200).json({
+      success: false,
+      message: ERROR_CODE.STUDY_DATA_NOT_FOUND
+    });
+    return;
+  }
+
+  const currentQuestions = currentStudyData.questions;
+  const question = {
+    user,
     title,
     content,
-    user,
     slideOrder,
     slideImageURL,
-    studyGroupId,
     like: 0
-  });
+  };
+
+  currentQuestions.push(question);
+
+  const data = await studyDataModel.updateOne({
+    id: studyDataId
+  }, {
+    questions: currentQuestions
+  }, { new: true });
 
   res.status(201).send({
     success: true,
@@ -61,28 +73,45 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
   });
 });
 
-const updateQuestionValidator = createQuestionValidator.slice(1);
-router.put('/:id', updateQuestionValidator, checkValidation, async (req: express.Request, res: express.Response) => {
-  const { id } = req.params;
-  const { title, content, slideOrder, slideImageURL, studyGroupId } = req.body;
+router.post('/like/:studyDataId/:questionId', async (req, res) => {
+  const { studyDataId, questionId } = req.params;
 
-  const data = await questionModel.findOneAndUpdate({
-    id
-  }, {
-    title,
-    content,
-    slideOrder,
-    slideImageURL,
-    studyGroupId
-  }, { new: true });
+  const currentStudyData = await studyDataModel.findOne({
+    id: studyDataId
+  });
 
-  if (!data) {
+  if (!currentStudyData) {
+    res.status(200).json({
+      success: false,
+      message: ERROR_CODE.STUDY_DATA_NOT_FOUND
+    });
+    return;
+  }
+
+  const question = currentStudyData.questions.find((item) => item.id === parseInt(questionId, 10));
+  if (!question) {
     res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
     });
     return;
   }
+
+  const newQuestion = {
+    ...question,
+    like: question.like + 1
+  };
+
+  const newData = [
+    newQuestion,
+    ...currentStudyData.questions
+  ];
+
+  const data = await studyDataModel.updateOne({
+    id: studyDataId,
+  }, {
+    questions: newData
+  }, { new: true });
 
   res.status(200).send({
     success: true,
@@ -90,14 +119,23 @@ router.put('/:id', updateQuestionValidator, checkValidation, async (req: express
   });
 });
 
-router.post('/like/:id', async (req, res) => {
-  const { id } = req.params;
+router.delete('/like/:studyDataId/:questionId', async (req, res) => {
+  const { studyDataId, questionId } = req.params;
 
-  const data = await questionModel.findOne({
-    id
+  const currentStudyData = await studyDataModel.findOne({
+    id: studyDataId
   });
 
-  if (!data) {
+  if (!currentStudyData) {
+    res.status(200).json({
+      success: false,
+      message: ERROR_CODE.STUDY_DATA_NOT_FOUND
+    });
+    return;
+  }
+
+  const question = currentStudyData.questions.find((item) => item.id === parseInt(questionId, 10));
+  if (!question) {
     res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
@@ -105,30 +143,45 @@ router.post('/like/:id', async (req, res) => {
     return;
   }
 
-  const currentLike = data.like;
+  const newQuestion = {
+    ...question,
+    like: question.like - 1
+  };
 
-  await data.update({
-    like: currentLike + 1
-  });
+  const newData = [
+    newQuestion,
+    ...currentStudyData.questions
+  ];
 
-  const newData = await questionModel.findOne({
-    id
-  });
+  const data = await studyDataModel.updateOne({
+    id: studyDataId,
+  }, {
+    questions: newData
+  }, { new: true });
 
   res.status(200).send({
     success: true,
-    data: newData
+    data
   });
 });
 
-router.delete('/like/:id', async (req, res) => {
-  const { id } = req.params;
+router.delete('/:studyDataId/:questionId', async (req, res) => {
+  const { studyDataId, questionId } = req.params;
 
-  const data = await questionModel.findOne({
-    id
+  const currentStudyData = await studyDataModel.findOne({
+    id: studyDataId
   });
 
-  if (!data) {
+  if (!currentStudyData) {
+    res.status(200).json({
+      success: false,
+      message: ERROR_CODE.STUDY_DATA_NOT_FOUND
+    });
+    return;
+  }
+
+  const questionIndex = currentStudyData.questions.findIndex((item) => item.id === parseInt(questionId, 10));
+  if (questionIndex === -1) {
     res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
@@ -136,46 +189,15 @@ router.delete('/like/:id', async (req, res) => {
     return;
   }
 
-  const currentLike = data.like;
+  delete currentStudyData.questions[questionIndex];
 
-  if (currentLike <= 0) {
-    res.status(200).json({
-      success: false,
-      message: ERROR_CODE.QUESTION_LIKE_NOT_MINUS
-    });
-    return;
-  }
-
-  await data.update({
-    like: currentLike - 1
-  });
-
-  const newData = await questionModel.findOne({
-    id
-  });
+  const data = await studyDataModel.updateOne({
+    id: studyDataId,
+  }, {
+    questions: currentStudyData.questions
+  }, { new: true });
 
   res.status(200).send({
-    success: true,
-    data: newData
-  });
-});
-
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  const data = await questionModel.findOneAndDelete({
-    id
-  });
-
-  if (!data) {
-    res.status(200).json({
-      success: false,
-      message: ERROR_CODE.QUESTION_NOT_FOUND
-    });
-    return;
-  }
-
-  res.status(200).json({
     success: true,
     data
   });

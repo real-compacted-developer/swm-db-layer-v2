@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 import autoIncrement from 'mongoose-auto-increment';
-import { QuestionAttribute, questionSchema } from './questionModel';
+import { QuestionAttribute, questionSchema } from './questionSchema';
 
 export interface StudyDataAttribute extends mongoose.Document {
-    readonly id: number;
-    readonly week: number;
-    readonly date: Date;
-    readonly slideInfo: string[];
-    readonly studyGroupId: string;
-    readonly questions: QuestionAttribute[];
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+  readonly id: number;
+  readonly week: number;
+  readonly date: Date;
+  readonly slideInfo: string[];
+  readonly studyGroupId: string;
+  readonly questions: QuestionAttribute[];
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 }
 
 export const studyDataSchema: mongoose.Schema = new mongoose.Schema({
@@ -38,6 +38,7 @@ export const studyDataSchema: mongoose.Schema = new mongoose.Schema({
   },
   questions: {
     type: [questionSchema],
+    default: [],
     required: true
   }
 }, {

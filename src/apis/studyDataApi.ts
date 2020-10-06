@@ -59,11 +59,10 @@ const createStudyDataValidator = [
   body('week').isNumeric(),
   body('date').isDate(),
   body('slideInfo').isArray(),
-  body('studyGroupId').isString(),
-  body('questions').isArray()
+  body('studyGroupId').isString()
 ];
 router.post('/', createStudyDataValidator, checkValidation, async (req: express.Request, res: express.Response) => {
-  const { week, date, slideInfo, studyGroupId, questions } = req.body;
+  const { week, date, slideInfo, studyGroupId } = req.body;
 
   const currentStudyGroup = await studyGroupModel.findOne({
     id: studyGroupId
@@ -80,8 +79,7 @@ router.post('/', createStudyDataValidator, checkValidation, async (req: express.
     week,
     date,
     slideInfo,
-    studyGroupId,
-    questions
+    studyGroupId
   });
 
   res.status(201).send({
@@ -92,7 +90,7 @@ router.post('/', createStudyDataValidator, checkValidation, async (req: express.
 
 router.put('/:id', createStudyDataValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
-  const { week, date, slideInfo, studyGroupId, questions } = req.body;
+  const { week, date, slideInfo, studyGroupId } = req.body;
 
   const currentStudyGroup = await studyGroupModel.findOne({
     id: studyGroupId
@@ -111,8 +109,7 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
     week,
     date,
     slideInfo,
-    studyGroupId,
-    questions
+    studyGroupId
   }, { new: true });
 
   if (!data) {

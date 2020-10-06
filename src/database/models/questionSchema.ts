@@ -2,18 +2,16 @@ import mongoose from 'mongoose';
 import autoIncrement from 'mongoose-auto-increment';
 import { userSchema } from './userModel';
 
-export interface QuestionAttribute extends mongoose.Document {
-    readonly id: number;
-    readonly studyDataId: number;
-    readonly userId: string;
-    readonly title: string;
-    readonly content: string;
-    readonly like: number;
-    readonly slideOrder: number;
-    readonly slideImageURL: string;
-    readonly studyGroupId: string;
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+export interface QuestionAttribute {
+  readonly id?: number;
+  readonly user: string;
+  readonly title: string;
+  readonly content: string;
+  readonly like: number;
+  readonly slideOrder: number;
+  readonly slideImageURL: string;
+  readonly createdAt?: Date;
+  readonly updatedAt?: Date;
 }
 
 export const questionSchema: mongoose.Schema = new mongoose.Schema({
@@ -46,10 +44,6 @@ export const questionSchema: mongoose.Schema = new mongoose.Schema({
   slideImageURL: {
     type: String,
     required: true
-  },
-  studyGroupId: {
-    type: String,
-    required: true
   }
 }, {
   timestamps: true
@@ -64,6 +58,4 @@ questionSchema.plugin(autoIncrement.plugin, {
   increment: 1
 });
 
-const questionModel = mongoose.model<QuestionAttribute>('question', questionSchema);
-
-export default questionModel;
+export default questionSchema;
