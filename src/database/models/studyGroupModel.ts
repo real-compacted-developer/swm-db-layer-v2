@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { userSchema } from './userModel';
 
 export interface StudyGroupAttribute extends mongoose.Document {
   readonly id: string;

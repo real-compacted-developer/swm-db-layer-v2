@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import autoIncrement from 'mongoose-auto-increment';
-import { userSchema } from './userModel';
 
 export interface QuestionAttribute {
   readonly id?: number;

@@ -180,7 +180,9 @@ router.delete('/:studyDataId/:questionId', async (req, res) => {
     return;
   }
 
-  const questionIndex = currentStudyData.questions.findIndex((item) => item.id === parseInt(questionId, 10));
+  const questionIndex = currentStudyData.questions
+    .findIndex((item) => item.id === parseInt(questionId, 10));
+
   if (questionIndex === -1) {
     res.status(200).json({
       success: false,
