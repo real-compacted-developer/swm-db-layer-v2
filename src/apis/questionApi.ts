@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/:studyDataId', async (req, res) => {
   const { studyDataId } = req.params;
   const data = await studyDataModel.findOne({
-    studyDataId
+    id: studyDataId
   });
 
   if (!data) {
@@ -61,7 +61,7 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
 
   currentQuestions.push(question);
 
-  const data = await studyDataModel.updateOne({
+  const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId
   }, {
     questions: currentQuestions
@@ -107,7 +107,7 @@ router.post('/like/:studyDataId/:questionId', async (req, res) => {
     ...currentStudyData.questions
   ];
 
-  const data = await studyDataModel.updateOne({
+  const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId,
   }, {
     questions: newData
@@ -153,7 +153,7 @@ router.delete('/like/:studyDataId/:questionId', async (req, res) => {
     ...currentStudyData.questions
   ];
 
-  const data = await studyDataModel.updateOne({
+  const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId,
   }, {
     questions: newData
@@ -193,7 +193,7 @@ router.delete('/:studyDataId/:questionId', async (req, res) => {
 
   delete currentStudyData.questions[questionIndex];
 
-  const data = await studyDataModel.updateOne({
+  const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId,
   }, {
     questions: currentStudyData.questions
