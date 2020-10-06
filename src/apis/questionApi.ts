@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
     });
@@ -74,7 +74,7 @@ router.put('/:id', updateQuestionValidator, checkValidation, async (req: express
   }, { new: true });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
     });
@@ -95,7 +95,7 @@ router.post('/like/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
     });
@@ -126,7 +126,7 @@ router.delete('/like/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
     });
@@ -136,7 +136,7 @@ router.delete('/like/:id', async (req, res) => {
   const currentLike = data.like;
 
   if (currentLike <= 0) {
-    res.status(400).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_LIKE_NOT_MINUS
     });
@@ -165,7 +165,7 @@ router.delete('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.QUESTION_NOT_FOUND
     });

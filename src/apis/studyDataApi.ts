@@ -22,7 +22,7 @@ router.get('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_DATA_NOT_FOUND
     });
@@ -42,7 +42,7 @@ router.get('/bystudy/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_DATA_NOT_FOUND
     });
@@ -69,7 +69,7 @@ router.post('/', createStudyDataValidator, checkValidation, async (req: express.
     id: studyGroupId
   });
   if (!currentStudyGroup) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_GROUP_NOT_FOUND
     });
@@ -98,7 +98,7 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
     id: studyGroupId
   });
   if (!currentStudyGroup) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_GROUP_NOT_FOUND
     });
@@ -116,7 +116,7 @@ router.put('/:id', createStudyDataValidator, checkValidation, async (req: expres
   }, { new: true });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_DATA_NOT_FOUND
     });
@@ -137,7 +137,7 @@ router.delete('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_DATA_NOT_FOUND
     });

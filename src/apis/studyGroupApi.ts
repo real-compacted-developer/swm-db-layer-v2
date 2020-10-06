@@ -22,7 +22,7 @@ router.get('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_GROUP_NOT_FOUND
     });
@@ -85,7 +85,7 @@ router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: expre
   }, { new: true });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_GROUP_NOT_FOUND
     });
@@ -110,7 +110,7 @@ router.post('/people/:id', peopleValidator, checkValidation, async (req: express
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_GROUP_NOT_FOUND
     });
@@ -142,7 +142,7 @@ router.delete('/people/:id', peopleValidator, checkValidation, async (req: expre
     id
   });
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_GROUP_NOT_FOUND
     });
@@ -175,7 +175,7 @@ router.delete('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.STUDY_GROUP_NOT_FOUND
     });

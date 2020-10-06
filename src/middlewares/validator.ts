@@ -9,7 +9,7 @@ const checkValidation = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(400).json({
+    res.status(200).json({
       success: false,
       message: errors.array()
     });

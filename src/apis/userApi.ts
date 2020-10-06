@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.USER_NOT_FOUND
     });
@@ -51,7 +51,7 @@ router.post('/', createUserValidator, checkValidation, async (req: express.Reque
     email
   });
   if (current) {
-    res.status(409).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.USER_ALREADY_EXISTS
     });
@@ -87,7 +87,7 @@ router.put('/:id', updateUserValidator, checkValidation, async (req: express.Req
   }, { new: true });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.USER_NOT_FOUND
     });
@@ -108,7 +108,7 @@ router.delete('/:id', async (req, res) => {
   });
 
   if (!data) {
-    res.status(404).json({
+    res.status(200).json({
       success: false,
       message: ERROR_CODE.USER_NOT_FOUND
     });
