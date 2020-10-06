@@ -39,10 +39,11 @@ const createQuestionValidator = [
   body('title').isString(),
   body('content').isString(),
   body('slideOrder').isNumeric(),
-  body('slideImageURL').isString()
+  body('slideImageURL').isString(),
+  body('studyGroupId').isString()
 ];
 router.post('/', createQuestionValidator, checkValidation, async (req: express.Request, res: express.Response) => {
-  const { title, content, user, slideOrder, slideImageURL } = req.body;
+  const { title, content, user, slideOrder, slideImageURL, studyGroupId } = req.body;
 
   const data = await questionModel.create({
     title,
@@ -50,6 +51,7 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
     user,
     slideOrder,
     slideImageURL,
+    studyGroupId,
     like: 0
   });
 
@@ -62,7 +64,7 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
 const updateQuestionValidator = createQuestionValidator.slice(1);
 router.put('/:id', updateQuestionValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
-  const { title, content, slideOrder, slideImageURL } = req.body;
+  const { title, content, slideOrder, slideImageURL, studyGroupId } = req.body;
 
   const data = await questionModel.findOneAndUpdate({
     id
@@ -70,7 +72,8 @@ router.put('/:id', updateQuestionValidator, checkValidation, async (req: express
     title,
     content,
     slideOrder,
-    slideImageURL
+    slideImageURL,
+    studyGroupId
   }, { new: true });
 
   if (!data) {

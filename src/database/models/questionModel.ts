@@ -11,6 +11,7 @@ export interface QuestionAttribute extends mongoose.Document {
     readonly like: number;
     readonly slideOrder: number;
     readonly slideImageURL: string;
+    readonly studyGroupId: string;
     readonly createdAt: Date;
     readonly updatedAt: Date;
 }
@@ -43,6 +44,10 @@ export const questionSchema: mongoose.Schema = new mongoose.Schema({
     required: true
   },
   slideImageURL: {
+    type: String,
+    required: true
+  },
+  studyGroupId: {
     type: String,
     required: true
   }
