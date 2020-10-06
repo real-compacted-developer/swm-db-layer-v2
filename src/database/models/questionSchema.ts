@@ -22,7 +22,7 @@ export const questionSchema: mongoose.Schema = new mongoose.Schema({
     index: true
   },
   user: {
-    type: userSchema,
+    type: String,
     required: true
   },
   title: {

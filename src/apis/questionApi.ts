@@ -27,7 +27,7 @@ router.get('/:studyDataId', async (req, res) => {
 });
 
 const createQuestionValidator = [
-  body('user').exists(),
+  body('user').isString(),
   body('title').isString(),
   body('content').isString(),
   body('slideOrder').isNumeric(),
