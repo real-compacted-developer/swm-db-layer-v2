@@ -2,20 +2,20 @@ import mongoose from 'mongoose';
 import autoIncrement from 'mongoose-auto-increment';
 
 export interface QuestionAttribute {
-  readonly id?: number;
+  readonly id: string;
   readonly user: string;
   readonly title: string;
   readonly content: string;
-  readonly like: number;
+  like: number;
   readonly slideOrder: number;
   readonly slideImageURL: string;
-  readonly createdAt?: Date;
-  readonly updatedAt?: Date;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 }
 
 export const questionSchema: mongoose.Schema = new mongoose.Schema({
   id: {
-    type: Number,
+    type: String,
     required: true,
     unique: true,
     index: true
@@ -43,18 +43,19 @@ export const questionSchema: mongoose.Schema = new mongoose.Schema({
   slideImageURL: {
     type: String,
     required: true
+  },
+  createdAt: {
+    type: Date,
+    required: true,
+    default: new Date()
+  },
+  updatedAt: {
+    type: Date,
+    required: true,
+    default: new Date()
   }
 }, {
   timestamps: true
-});
-
-autoIncrement.initialize(mongoose.connection);
-
-questionSchema.plugin(autoIncrement.plugin, {
-  model: 'question',
-  field: 'id',
-  startAt: 1,
-  increment: 1
 });
 
 export default questionSchema;

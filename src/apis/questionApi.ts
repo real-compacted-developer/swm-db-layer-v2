@@ -1,5 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
+import { v4 as uuidv4 } from 'uuid';
 import ERROR_CODE from '../constants/errorCode';
 import checkValidation from '../middlewares/validator';
 import studyDataModel from '../database/models/studyDataModel';
@@ -50,16 +51,18 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
   }
 
   const currentQuestions = currentStudyData.questions;
-  const question = {
+
+  currentQuestions.push({
+    id: uuidv4(),
     user,
     title,
     content,
     slideOrder,
     slideImageURL,
-    like: 0
-  };
-
-  currentQuestions.push(question);
+    like: 0,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  });
 
   const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId
@@ -88,7 +91,7 @@ router.post('/like/:studyDataId/:questionId', async (req, res) => {
     return;
   }
 
-  const question = currentStudyData.questions.find((item) => item.id === parseInt(questionId, 10));
+  const question = currentStudyData.questions.find((item) => item.id === questionId);
   if (!question) {
     res.status(200).json({
       success: false,
@@ -97,20 +100,13 @@ router.post('/like/:studyDataId/:questionId', async (req, res) => {
     return;
   }
 
-  const newQuestion = {
-    ...question,
-    like: question.like + 1
-  };
-
-  const newData = [
-    newQuestion,
-    ...currentStudyData.questions
-  ];
+  question.like += 1;
 
   const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId,
   }, {
-    questions: newData
+    questions: currentStudyData.questions,
+    updatedAt: new Date()
   }, { new: true });
 
   res.status(200).send({
@@ -134,7 +130,7 @@ router.delete('/like/:studyDataId/:questionId', async (req, res) => {
     return;
   }
 
-  const question = currentStudyData.questions.find((item) => item.id === parseInt(questionId, 10));
+  const question = currentStudyData.questions.find((item) => item.id === questionId);
   if (!question) {
     res.status(200).json({
       success: false,
@@ -143,20 +139,21 @@ router.delete('/like/:studyDataId/:questionId', async (req, res) => {
     return;
   }
 
-  const newQuestion = {
-    ...question,
-    like: question.like - 1
-  };
+  if (question.like <= 0) {
+    res.status(200).json({
+      success: false,
+      message: ERROR_CODE.QUESTION_LIKE_NOT_MINUS
+    });
+    return;
+  }
 
-  const newData = [
-    newQuestion,
-    ...currentStudyData.questions
-  ];
+  question.like -= 1;
 
   const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId,
   }, {
-    questions: newData
+    questions: currentStudyData.questions,
+    updatedAt: new Date()
   }, { new: true });
 
   res.status(200).send({
@@ -181,7 +178,7 @@ router.delete('/:studyDataId/:questionId', async (req, res) => {
   }
 
   const questionIndex = currentStudyData.questions
-    .findIndex((item) => item.id === parseInt(questionId, 10));
+    .findIndex((item) => item.id === questionId);
 
   if (questionIndex === -1) {
     res.status(200).json({
@@ -191,7 +188,7 @@ router.delete('/:studyDataId/:questionId', async (req, res) => {
     return;
   }
 
-  delete currentStudyData.questions[questionIndex];
+  currentStudyData.questions.splice(questionIndex, 1);
 
   const data = await studyDataModel.findOneAndUpdate({
     id: studyDataId,
