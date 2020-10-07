@@ -52,7 +52,7 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
 
   const currentQuestions = currentStudyData.questions;
 
-  currentQuestions.push({
+  const newQuestion = {
     id: uuidv4(),
     user,
     title,
@@ -62,17 +62,19 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
     like: 0,
     createdAt: new Date(),
     updatedAt: new Date()
-  });
+  };
 
-  const data = await studyDataModel.findOneAndUpdate({
+  currentQuestions.push(newQuestion);
+
+  await studyDataModel.findOneAndUpdate({
     id: studyDataId
   }, {
     questions: currentQuestions
-  }, { new: true });
+  });
 
   res.status(201).send({
     success: true,
-    data
+    data: newQuestion
   });
 });
 
