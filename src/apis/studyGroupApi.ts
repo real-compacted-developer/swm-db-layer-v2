@@ -7,6 +7,16 @@ import studyGroupModel from '../database/models/studyGroupModel';
 
 const router = express.Router();
 
+/**
+ * @api {get} /studygroup/
+ * @apiName 모든 스터디그룹 가져오기
+ * @apiGroup Database/StudyGroup
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Array} data 삭제된 스터디데이터
+ *
+ * @apiError STUDY_DATA_NOT_FOUND 스터디데이터가 없는 경우
+ */
 router.get('/', async (req, res) => {
   const data = await studyGroupModel.find();
   res.status(200).json({
@@ -15,6 +25,18 @@ router.get('/', async (req, res) => {
   });
 });
 
+/**
+ * @api {get} /studygroup/:id
+ * @apiName 스터디그룹 가져오기
+ * @apiGroup Database/StudyGroup
+ *
+ * @apiParam {String} id 스터디그룹 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 스터디그룹 데이터
+ *
+ * @apiError STUDY_GROUP_NOT_FOUND 스터디그룹이 없는 경우
+ */
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const data = await studyGroupModel.findOne({
@@ -44,6 +66,14 @@ const createStudyGroupValidator = [
   body('owner').isString(),
   body('isPremium').isBoolean()
 ];
+/**
+ * @api {post} /studygroup/
+ * @apiName 스터디그룹 만들기
+ * @apiGroup Database/StudyGroup
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 생성된 스터디그룹 데이터
+ */
 router.post('/', createStudyGroupValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { title, category, password, salt, maxPeople, owner, isPremium } = req.body;
 
@@ -68,6 +98,18 @@ router.post('/', createStudyGroupValidator, checkValidation, async (req: express
 const updateStudyGroupValidator = [
   ...createStudyGroupValidator
 ];
+/**
+ * @api {put} /studygroup/:id
+ * @apiName 스터디그룹 수정하기
+ * @apiGroup Database/StudyGroup
+ *
+ * @apiParam {String} id 스터디그룹 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 수정된 스터디그룹 데이터
+ *
+ * @apiError STUDY_GROUP_NOT_FOUND 스터디그룹이 없는 경우
+ */
 router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
   const { title, category, password, salt, maxPeople, owner, isPremium } = req.body;
@@ -101,6 +143,18 @@ router.put('/:id', updateStudyGroupValidator, checkValidation, async (req: expre
 const peopleValidator = [
   body('userId').isString()
 ];
+/**
+ * @api {post} /studygroup/people/:id
+ * @apiName 스터디그룹 허용 인원 추가하기
+ * @apiGroup Database/StudyGroup
+ *
+ * @apiParam {String} id 스터디그룹 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 수정된 스터디그룹 데이터
+ *
+ * @apiError STUDY_GROUP_NOT_FOUND 스터디그룹이 없는 경우
+ */
 router.post('/people/:id', peopleValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
   const { userId } = req.body;
@@ -134,6 +188,18 @@ router.post('/people/:id', peopleValidator, checkValidation, async (req: express
   });
 });
 
+/**
+ * @api {delete} /studygroup/people/:id
+ * @apiName 스터디그룹 허용 인원 제거하기
+ * @apiGroup Database/StudyGroup
+ *
+ * @apiParam {String} id 스터디그룹 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 수정된 스터디그룹 데이터
+ *
+ * @apiError STUDY_GROUP_NOT_FOUND 스터디그룹이 없는 경우
+ */
 router.delete('/people/:id', peopleValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { id } = req.params;
   const { userId } = req.body;
@@ -167,6 +233,18 @@ router.delete('/people/:id', peopleValidator, checkValidation, async (req: expre
   });
 });
 
+/**
+ * @api {delete} /studygroup/people/:id
+ * @apiName 스터디그룹 삭제하기
+ * @apiGroup Database/StudyGroup
+ *
+ * @apiParam {String} id 스터디그룹 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 삭제된 스터디그룹 데이터
+ *
+ * @apiError STUDY_GROUP_NOT_FOUND 스터디그룹이 없는 경우
+ */
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 

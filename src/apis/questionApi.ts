@@ -7,6 +7,18 @@ import studyDataModel from '../database/models/studyDataModel';
 
 const router = express.Router();
 
+/**
+ * @api {get} /question/:studyDataId
+ * @apiName 스터디데이터의 모든 질문 가져오기
+ * @apiGroup Database/Question
+ *
+ * @apiParam {String} studyDataId 스터디데이터 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Array} data 질문 데이터
+ *
+ * @apiError STUDY_DATA_NOT_FOUND 해당 스터디데이터가 없는 경우
+ */
 router.get('/:studyDataId', async (req, res) => {
   const { studyDataId } = req.params;
   const data = await studyDataModel.findOne({
@@ -35,6 +47,16 @@ const createQuestionValidator = [
   body('slideImageURL').isString(),
   body('studyDataId').isString()
 ];
+/**
+ * @api {post} /question/
+ * @apiName 새로운 질문 만들기
+ * @apiGroup Database/Question
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 추가한 질문 데이터
+ *
+ * @apiError STUDY_DATA_NOT_FOUND 해당 스터디데이터가 없는 경우
+ */
 router.post('/', createQuestionValidator, checkValidation, async (req: express.Request, res: express.Response) => {
   const { title, content, user, slideOrder, slideImageURL, studyDataId } = req.body;
 
@@ -78,6 +100,20 @@ router.post('/', createQuestionValidator, checkValidation, async (req: express.R
   });
 });
 
+/**
+ * @api {post} /question/like/:studyDataId/:questionId
+ * @apiName 질문 좋아요 올리기
+ * @apiGroup Database/Question
+ *
+ * @apiParam {String} studyDataId 스터디데이터 ID
+ * @apiParam {String} questionId 질문 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 좋아요 변경한 질문 데이터
+ *
+ * @apiError STUDY_DATA_NOT_FOUND 해당 스터디데이터가 없는 경우
+ * @apiError QUESTION_NOT_FOUND 해당 질문이 없는 경우
+ */
 router.post('/like/:studyDataId/:questionId', async (req, res) => {
   const { studyDataId, questionId } = req.params;
 
@@ -117,6 +153,21 @@ router.post('/like/:studyDataId/:questionId', async (req, res) => {
   });
 });
 
+/**
+ * @api {delete} /question/like/:studyDataId/:questionId
+ * @apiName 질문 좋아요 내리기
+ * @apiGroup Database/Question
+ *
+ * @apiParam {String} studyDataId 스터디데이터 ID
+ * @apiParam {String} questionId 질문 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 좋아요 변경한 질문 데이터
+ *
+ * @apiError STUDY_DATA_NOT_FOUND 해당 스터디데이터가 없는 경우
+ * @apiError QUESTION_NOT_FOUND 해당 질문이 없는 경우
+ * @apiError QUESTION_LIKE_NOT_MINUS 질문 좋아요를 음수로 바꾸려고 시도했을 때
+ */
 router.delete('/like/:studyDataId/:questionId', async (req, res) => {
   const { studyDataId, questionId } = req.params;
 
@@ -164,6 +215,20 @@ router.delete('/like/:studyDataId/:questionId', async (req, res) => {
   });
 });
 
+/**
+ * @api {delete} /question/:studyDataId/:questionId
+ * @apiName 질문 삭제하기
+ * @apiGroup Database/Question
+ *
+ * @apiParam {String} studyDataId 스터디데이터 ID
+ * @apiParam {String} questionId 질문 ID
+ *
+ * @apiSuccess {Boolean} success 성공 여부
+ * @apiSuccess {Object} data 삭제한 질문 데이터
+ *
+ * @apiError STUDY_DATA_NOT_FOUND 해당 스터디데이터가 없는 경우
+ * @apiError QUESTION_NOT_FOUND 해당 질문이 없는 경우
+ */
 router.delete('/:studyDataId/:questionId', async (req, res) => {
   const { studyDataId, questionId } = req.params;
 
